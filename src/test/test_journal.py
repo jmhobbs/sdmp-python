@@ -25,3 +25,23 @@ class TestJournal (unittest.TestCase):
         journal.append_entry("RESOURCE_NODE_KEY_FINGERPRINT_1", "RESOURCE_IDENTIFIER_2")
         journal.append_entry("RESOURCE_NODE_KEY_FINGERPRINT_3", "RESOURCE_IDENTIFIER_3")
         self.assertEqual(expected_journal_1, journal.dump())
+
+    def test_entries(self):
+        journal = Journal("7a5179eecc0fe18760ba615f92603372ae3fe302860098a019e15927551fee3b")
+        journal.append_entry("d341ba4104e7c004c2fe56d65636b945b57550081711a1d306a9f41d2b440c75", "ad700edf9094f10db2f4e56185645fd3630bbbab832d6f659dad08f0d9f43743")
+        journal.append_entry("d341ba4104e7c004c2fe56d65636b945b57550081711a1d306a9f41d2b440c75", "9094f10db2f4e56185645fd3630bbbab832d6f659dad08f0d9f43743ad700edf")
+
+        journal_lines = [
+            u"7a5179eecc0fe18760ba615f92603372ae3fe302860098a019e15927551fee3b",
+            u"1467d232075b693bd528521179679ec07a083e4f0076ecd2af61607d6b5b2b38@d341ba4104e7c004c2fe56d65636b945b57550081711a1d306a9f41d2b440c75/ad700edf9094f10db2f4e56185645fd3630bbbab832d6f659dad08f0d9f43743",
+            u"7f6b5d882777fa3620c2a0c86c31537b30cbfaa55f09fb948c9ed491e0968fce@d341ba4104e7c004c2fe56d65636b945b57550081711a1d306a9f41d2b440c75/9094f10db2f4e56185645fd3630bbbab832d6f659dad08f0d9f43743ad700edf"
+        ]
+
+        entries = journal.entries("7a5179eecc0fe18760ba615f92603372ae3fe302860098a019e15927551fee3b")
+        self.assertEqual(entries, journal_lines[1:])
+
+        entries = journal.entries("1467d232075b693bd528521179679ec07a083e4f0076ecd2af61607d6b5b2b38")
+        self.assertEqual(entries, journal_lines[2:])
+
+        entries = journal.entries("7f6b5d882777fa3620c2a0c86c31537b30cbfaa55f09fb948c9ed491e0968fce")
+        self.assertEqual(entries, [])
